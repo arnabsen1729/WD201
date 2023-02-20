@@ -41,7 +41,7 @@ const todoList = () => {
   
     const toDisplayableList = (list) => {
       return list.map((item) => {
-        return `[${item.completed ? 'X' : ' '}] ${item.title} ${item.dueDate ? `${item.dueDate}` : ''}`
+        return `[${item.completed ? 'x' : ' '}] ${item.title} ${item.dueDate ? `${item.dueDate}` : ''}`
       }).join('\n')
     }
   
