@@ -1,5 +1,5 @@
 const todoList = () => {
-  all = [];
+  const all = [];
   const add = (todoItem) => {
     all.push(todoItem);
   };
@@ -11,49 +11,43 @@ const todoList = () => {
     const today = new Date().toISOString().split("T")[0];
     return all
       .filter((item) => item.dueDate < today)
-      .map((item) => {
-        return {
-          title: item.title,
-          dueDate: item.dueDate,
-          completed: item.completed,
-        };
-      });
+      .map((item) => ({
+        title: item.title,
+        dueDate: item.dueDate,
+        completed: item.completed,
+      }));
   };
 
   const dueToday = () => {
     const today = new Date().toISOString().split("T")[0];
     return all
       .filter((item) => item.dueDate === today)
-      .map((item) => {
-        return {
-          title: item.title,
-          completed: item.completed,
-        };
-      });
+      .map((item) => ({
+        title: item.title,
+        completed: item.completed,
+      }));
   };
 
   const dueLater = () => {
     const today = new Date().toISOString().split("T")[0];
     return all
       .filter((item) => item.dueDate > today)
-      .map((item) => {
-        return {
-          title: item.title,
-          dueDate: item.dueDate,
-          completed: item.completed,
-        };
-      });
+      .map((item) => ({
+        title: item.title,
+        dueDate: item.dueDate,
+        completed: item.completed,
+      }));
   };
 
-  const toDisplayableList = (list) => {
-    return list
-      .map((item) => {
-        return `[${item.completed ? "x" : " "}] ${item.title} ${
-          item.dueDate ? `${item.dueDate}` : ""
-        }`;
-      })
+  const toDisplayableList = (list) =>
+    list
+      .map(
+        (item) =>
+          `[${item.completed ? "x" : " "}] ${item.title} ${
+            item.dueDate ? `${item.dueDate}` : ""
+          }`
+      )
       .join("\n");
-  };
 
   return {
     all,
