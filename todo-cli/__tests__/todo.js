@@ -1,30 +1,40 @@
 const todoList = require("../todo");
-
+const {
+  getRandomTitle,
+  getRandomBoolean,
+  getRandomDateInPast,
+  getRandomDateInFuture,
+} = require("../utils");
 const { all, add, markAsComplete, overdue, dueToday, dueLater } = todoList();
 
 describe("TodoList Test Suite", () => {
   beforeAll(() => {
-    const today = new Date();
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
+    // 5 todos with due dates as today
+    for (let i = 0; i < 5; i++) {
+      add({
+        title: getRandomTitle(),
+        dueDate: new Date().toISOString().split("T")[0],
+        completed: false,
+      });
+    }
 
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    add({
-      title: "Today's task",
-      dueDate: today.toISOString().split("T")[0],
-      completed: false,
-    });
-    add({
-      title: "Yesterday's task",
-      dueDate: yesterday.toISOString().split("T")[0],
-      completed: false,
-    });
-    add({
-      title: "Tomorrow's task",
-      dueDate: tomorrow.toISOString().split("T")[0],
-      completed: false,
-    });
+    // 5 todos with due dates in the past
+    for (let i = 0; i < 5; i++) {
+      add({
+        title: getRandomTitle(),
+        dueDate: getRandomDateInPast(),
+        completed: getRandomBoolean(),
+      });
+    }
+
+    // 5 todos with due dates in the future
+    for (let i = 0; i < 5; i++) {
+      add({
+        title: getRandomTitle(),
+        dueDate: getRandomDateInFuture(),
+        completed: getRandomBoolean(),
+      });
+    }
   });
 
   test("creating a new todo", () => {
@@ -45,16 +55,31 @@ describe("TodoList Test Suite", () => {
 
   test("retrieval of overdue items", () => {
     const overdueItems = overdue();
-    expect(overdueItems.length).toBe(1);
+    add({
+      title: "Buy milk",
+      dueDate: getRandomDateInPast(),
+      completed: false,
+    });
+    expect(overdue().length).toBe(overdueItems.length + 1);
   });
 
   test("retrieval of due today items", () => {
     const dueTodayItems = dueToday();
-    expect(dueTodayItems.length).toBe(2);
+    add({
+      title: "Buy milk",
+      dueDate: new Date().toISOString().split("T")[0],
+      completed: false,
+    });
+    expect(dueToday().length).toBe(dueTodayItems.length + 1);
   });
 
   test(" retrieval of due later items", () => {
     const dueLaterItems = dueLater();
-    expect(dueLaterItems.length).toBe(1);
+    add({
+      title: "Buy milk",
+      dueDate: getRandomDateInFuture(),
+      completed: false,
+    });
+    expect(dueLater().length).toBe(dueLaterItems.length + 1);
   });
 });
