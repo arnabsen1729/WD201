@@ -26,9 +26,23 @@ const getRandomBoolean = () => {
   return Math.random() >= 0.5;
 };
 
+const getRandomTodo = () => {
+  const dates = [
+    getRandomDateInFuture(),
+    getRandomDateInPast(),
+    new Date().toISOString().split("T")[0],
+  ];
+  return {
+    title: getRandomTitle(),
+    dueDate: dates[Math.floor(Math.random() * dates.length)],
+    completed: getRandomBoolean(),
+  };
+};
+
 module.exports = {
   getRandomTitle,
   getRandomDateInFuture,
   getRandomDateInPast,
   getRandomBoolean,
+  getRandomTodo,
 };
