@@ -36,12 +36,14 @@ describe("Todo test suite", () => {
   });
 
   test("Mark a todo as completed by PUT /todos/:id/markAsCompleted", async () => {
+    // create an uncompleted todo
     const response = await agent.post("/todos").send({
       title: "Test marking a todo as completed",
       dueDate: new Date().toISOString(),
       completed: false,
     });
 
+    expect(response.statusCode).toBe(200);
     const todo = JSON.parse(response.text);
     const markCompleteResponse = await agent.put(
       `/todos/${todo.id}/markAsCompleted`
@@ -53,5 +55,25 @@ describe("Todo test suite", () => {
     const parseMarkCompleteResponse = JSON.parse(markCompleteResponse.text);
     expect(parseMarkCompleteResponse).toHaveProperty("completed");
     expect(parseMarkCompleteResponse.completed).toBe(true);
+  });
+
+  test("Delete a todo by DELETE /todos/:id", async () => {
+    // create a todo
+    const response = await agent.post("/todos").send({
+      title: "Test deleting a todo",
+      dueDate: new Date().toISOString(),
+      completed: false,
+    });
+
+    expect(response.statusCode).toBe(200);
+    const todo = JSON.parse(response.text);
+    const deleteResponse = await agent.delete(`/todos/${todo.id}`);
+    expect(deleteResponse.statusCode).toBe(200);
+    expect(deleteResponse.headers["content-type"]).toEqual(
+      expect.stringContaining("json")
+    );
+    const parseDeleteResponse = JSON.parse(deleteResponse.text);
+    expect(parseDeleteResponse).toHaveProperty("message");
+    expect(parseDeleteResponse.message).toBe(`Todo ${todo.id} deleted`);
   });
 });
