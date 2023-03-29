@@ -1,0 +1,18 @@
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Due Date</th>
+            <th>Completed</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% for (let todo of todos) { %>
+            <tr>
+                <td><%= todo.title %></td>
+                <td><%= todo.dueDate %></td>
+                <td><%= todo.completed %></td>
+            </tr>
+        <% } %>
+    </tbody>
+</table>

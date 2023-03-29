@@ -10,12 +10,7 @@
   <body>
     <%- include('header.ejs') %>
     <!-- List all the TODOS -->
-    <ul>
-      <% for (let todo of todos) { %>
-        <li>
-          <%= todo.title %>
-        </li>
-      <% } %>
-    </ul>
+    <%- include('todos.ejs', { todos: todos }) %>
+    <%- include('footer.ejs') %>
   </body>
 </html>
