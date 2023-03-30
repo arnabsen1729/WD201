@@ -20,7 +20,8 @@ module.exports = (sequelize, DataTypes) => {
         where: {
           dueDate: {
             [Op.lt]: new Date()
-          }
+          },
+          completed: false
         }
       })
     }
@@ -30,7 +31,8 @@ module.exports = (sequelize, DataTypes) => {
         where: {
           dueDate: {
             [Op.gt]: new Date()
-          }
+          },
+          completed: false
         }
       })
     }
@@ -40,7 +42,16 @@ module.exports = (sequelize, DataTypes) => {
         where: {
           dueDate: {
             [Op.eq]: new Date()
-          }
+          },
+          completed: false
+        }
+      })
+    }
+
+    static completedTodos () {
+      return this.findAll({
+        where: {
+          completed: true
         }
       })
     }
@@ -53,9 +64,9 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
 
-    markAsCompleted () {
+    setCompletionStatus(status) {
       try {
-        this.update({ completed: true })
+        this.update({ completed: status })
       } catch (error) {
         console.error('Error marking a task as completed', error)
       }

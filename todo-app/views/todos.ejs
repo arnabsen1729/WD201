@@ -3,7 +3,7 @@
   <ul class="list-none">
     <% for (let todo of overdueTodos) { %>
         <li class="todo-item">
-            <%- include('todo-item.ejs', { todo, category: 'overdue' }) %>
+            <%- include('todo-item.ejs', { todo }) %>
         </li>
     <% } %>
   </ul>
@@ -11,7 +11,7 @@
   <ul class="list-none">
     <% for (let todo of dueTodayTodos) { %>
         <li class="todo-item">
-            <%- include('todo-item.ejs', { todo, category: 'dueToday' }) %>
+            <%- include('todo-item.ejs', { todo }) %>
         </li>
     <% } %>
   </ul>
@@ -19,7 +19,15 @@
   <ul class="list-none">
     <% for (let todo of dueLaterTodos) { %>
         <li class="todo-item">
-            <%- include('todo-item.ejs', { todo, category: 'dueLater' }) %>
+            <%- include('todo-item.ejs', { todo }) %>
+        </li>
+    <% } %>
+  </ul>
+  <div class="flex gap-2"><h5>Completed</h5><span id="count-completed">(<%= completedTodos.length %>)</span></div>
+  <ul class="list-none">
+    <% for (let todo of completedTodos) { %>
+        <li class="todo-item">
+            <%- include('todo-item.ejs', { todo }) %>
         </li>
     <% } %>
   </ul>
