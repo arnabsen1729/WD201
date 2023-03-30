@@ -5,6 +5,7 @@ const path = require('path')
 
 const app = express()
 app.use(bodyParser.json())
+app.use(express.urlencoded({ extended: false }))
 
 app.set('view engine', 'ejs')
 app.use(express.static(path.join(__dirname, 'public')))
@@ -33,7 +34,11 @@ app.get('/todos', async (req, res) => {
 app.post('/todos', async (req, res) => {
   try {
     const todo = await Todo.addTodo(req.body.title, req.body.dueDate)
-    return res.json(todo)
+    if (req.accepts('html')) {
+      return res.redirect('/')
+    } else {
+      return res.json(todo)
+    }
   } catch (error) {
     return res.status(422).send({ error: error.message })
   }

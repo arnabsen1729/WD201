@@ -12,12 +12,12 @@
     <div class="grid grid-cols-6">
       <div class="col-start-3 col-span-2">
         <%- include('header.ejs') %>
-        <form>
+        <form action="/todos" method="POST">
           <div class="flex gap-2 mt-5">
             <div class="flex-auto">
-              <input placeholder="What's next?" type="text" required class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm "/>
+              <input placeholder="What's next?" name="title" type="text" required class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm "/>
             </div>
-            <div class="flex-auto"><input type="date" required class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm leading-4"/></div>
+            <div class="flex-auto"><input type="date" name="dueDate" required class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm leading-4"/></div>
             <div class="flex-none"><button type="submit" class="bg-green-600 text-white px-5 py-2 rounded">Add</button></div>
           </div>
         </form>
