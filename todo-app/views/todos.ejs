@@ -1,18 +1,26 @@
-<table>
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Due Date</th>
-            <th>Completed</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% for (let todo of todos) { %>
-            <tr>
-                <td><%= todo.title %></td>
-                <td><%= todo.dueDate %></td>
-                <td><%= todo.completed %></td>
-            </tr>
-        <% } %>
-    </tbody>
-</table>
+<div>
+  <div class="flex gap-2"><h5>Overdue</h5><span id="count-overdue">(<%= overdueTodos.length %>)</span></div>
+  <ul class="list-none">
+    <% for (let todo of overdueTodos) { %>
+        <li class="todo-item">
+            <%- include('todo-item.ejs', { todo, category: 'overdue' }) %>
+        </li>
+    <% } %>
+  </ul>
+  <div class="flex gap-2"><h5>Due Today</h5><span id="count-due-today">(<%= dueTodayTodos.length %>)</span></div>
+  <ul class="list-none">
+    <% for (let todo of dueTodayTodos) { %>
+        <li class="todo-item">
+            <%- include('todo-item.ejs', { todo, category: 'dueToday' }) %>
+        </li>
+    <% } %>
+  </ul>
+  <div class="flex gap-2"><h5>Due Later</h5><span id="count-due-later">(<%= dueLaterTodos.length %>)</span></div>
+  <ul class="list-none">
+    <% for (let todo of dueLaterTodos) { %>
+        <li class="todo-item">
+            <%- include('todo-item.ejs', { todo, category: 'dueLater' }) %>
+        </li>
+    <% } %>
+  </ul>
+</div>

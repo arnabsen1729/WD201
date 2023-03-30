@@ -1,0 +1,12 @@
+<div class="flex items-center w-fit mx-2 px-2 py-1 hover:bg-purple-50 rounded">
+  <input
+    type="checkbox"
+    id="<%= category %>-<%= todo.id %>"
+    class="w-4 h-4 text-blue-600 bg-green-600 rounded"
+  />
+  <label class="ml-2 text-sm flex-auto cursor-pointer" for="<%= category %>-<%= todo.id %>" value="<%= todo.completed %>"
+    ><%= todo.title %></label
+  >
+  <a href="#" class="hidden trash-icon ml-2"><%- include('trash.ejs') %></a>
+</div>
+<!-- <pre><%= todo.id %> <%= todo.title %> <%= todo.completed %> <%= todo.dueDate %></pre> -->
