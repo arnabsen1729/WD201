@@ -47,7 +47,7 @@ describe('Todo test suite', () => {
     expect(parseResponse).toHaveProperty('completed')
   })
 
-  test('Mark a todo as completed by PUT /todos/:id', async () => {
+  test('Mark a todo as completed and then incomplete by PUT /todos/:id', async () => {
     // create an uncompleted todo
     let home = await agent.get('/')
     let csrfToken = extractCsrfToken(home.text)
@@ -79,6 +79,22 @@ describe('Todo test suite', () => {
     const parseMarkCompleteResponse = JSON.parse(markCompleteResponse.text)
     expect(parseMarkCompleteResponse).toHaveProperty('completed')
     expect(parseMarkCompleteResponse.completed).toBe(true)
+
+    home = await agent.get('/')
+    csrfToken = extractCsrfToken(home.text)
+
+    const markIncompleteResponse = await agent
+      .set('Accept', 'application/json')
+      .put(`/todos/${todo.id}`)
+      .send({ completed: false, _csrf: csrfToken })
+
+    expect(markIncompleteResponse.statusCode).toBe(200)
+    expect(markIncompleteResponse.headers['content-type']).toEqual(
+      expect.stringContaining('json')
+    )
+    const parseMarkIncompleteResponse = JSON.parse(markIncompleteResponse.text)
+    expect(parseMarkIncompleteResponse).toHaveProperty('completed')
+    expect(parseMarkIncompleteResponse.completed).toBe(false)
   })
 
   test('Delete a todo by DELETE /todos/:id where the todo exists', async () => {
