@@ -8,67 +8,91 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate (models) {
-      // define association here
+      Todo.belongsTo(models.User, { foreignKey: 'userId' })
     }
 
     static getTodos () {
       return this.findAll()
     }
 
-    static overdueTodos () {
+    static overdueTodos (userId) {
       return this.findAll({
         where: {
           dueDate: {
             [Op.lt]: new Date()
           },
+          userId,
           completed: false
         }
       })
     }
 
-    static dueLaterTodos () {
+    static dueLaterTodos (userId) {
       return this.findAll({
         where: {
           dueDate: {
             [Op.gt]: new Date()
           },
+          userId,
           completed: false
         }
       })
     }
 
-    static dueTodayTodos () {
+    static dueTodayTodos (userId) {
       return this.findAll({
         where: {
           dueDate: {
             [Op.eq]: new Date()
           },
+          userId,
           completed: false
         }
       })
     }
 
-    static completedTodos () {
+    static completedTodos (userId) {
       return this.findAll({
         where: {
-          completed: true
+          completed: true,
+          userId
         }
       })
     }
 
-    static addTodo (title, dueDate) {
+    static addTodo (title, dueDate, userId) {
       try {
-        return this.create({ title, dueDate, completed: false })
+        return this.create({ title, dueDate, completed: false, userId })
       } catch (error) {
         console.error('Error adding a task', error)
       }
     }
 
-    setCompletionStatus(status) {
+    static remove (id, userId) {
+      return this.destroy({
+        where: {
+          id,
+          userId
+        }
+      })
+    }
+
+    static async setCompletionStatus(id, userId, status) {
       try {
-        this.update({ completed: status })
+        const [numRows, [updatedTodo]] = await this.update({ completed: status }, {
+          returning: true,
+          where: {
+            id,
+            userId,
+          },
+        });
+        if (numRows === 0) {
+          throw new Error('Todo not found or unauthorized');
+        }
+        return updatedTodo;
       } catch (error) {
-        console.error('Error marking a task as completed', error)
+        console.error('Error marking a task as completed', error);
+        throw error;
       }
     }
   }

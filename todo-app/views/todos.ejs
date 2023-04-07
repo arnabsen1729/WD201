@@ -1,34 +1,138 @@
-<div>
-  <div class="flex gap-2"><h5>Overdue</h5><span id="count-overdue">(<%= overdueTodos.length %>)</span></div>
-  <ul class="list-none">
-    <% for (let todo of overdueTodos) { %>
-        <li class="todo-item">
-            <%- include('todo-item.ejs', { todo }) %>
-        </li>
-    <% } %>
-  </ul>
-  <div class="flex gap-2"><h5>Due Today</h5><span id="count-due-today">(<%= dueTodayTodos.length %>)</span></div>
-  <ul class="list-none">
-    <% for (let todo of dueTodayTodos) { %>
-        <li class="todo-item">
-            <%- include('todo-item.ejs', { todo }) %>
-        </li>
-    <% } %>
-  </ul>
-  <div class="flex gap-2"><h5>Due Later</h5><span id="count-due-later">(<%= dueLaterTodos.length %>)</span></div>
-  <ul class="list-none">
-    <% for (let todo of dueLaterTodos) { %>
-        <li class="todo-item">
-            <%- include('todo-item.ejs', { todo }) %>
-        </li>
-    <% } %>
-  </ul>
-  <div class="flex gap-2"><h5>Completed</h5><span id="count-completed">(<%= completedTodos.length %>)</span></div>
-  <ul class="list-none">
-    <% for (let todo of completedTodos) { %>
-        <li class="todo-item">
-            <%- include('todo-item.ejs', { todo }) %>
-        </li>
-    <% } %>
-  </ul>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="<%= csrfToken %>" />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <title><%= title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      const token = document
+        .querySelector('meta[name="csrf-token"]')
+        .getAttribute("content");
+      function setCompletionStatus(todoId, status) {
+        fetch(`/todos/${todoId}`, {
+          method: "PUT",
+          headers: {
+            Accept: "html",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            _csrf: token,
+            completed: status,
+          }),
+        })
+          .then((res) => {
+            if (res.ok) {
+              window.location.reload();
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+
+      function deleteTodo(todoId) {
+        fetch(`/todos/${todoId}`, {
+          method: "DELETE",
+          headers: {
+            Accept: "html",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            _csrf: token,
+          }),
+        })
+          .then((res) => {
+            if (res.ok) {
+              window.location.reload();
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    </script>
+  </head>
+  <body>
+    <div class="grid grid-cols-6">
+      <div class="col-start-3 col-span-2">
+        <%- include('header.ejs') %>
+        <p class="py-2"><a href="/signout" class="text-blue-600 underline">Sign Out</a></p>
+        <p class="py-2">Welcome to To-do manager</p>
+        <form action="/todos" method="POST">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+          <div class="flex gap-2 mt-5">
+            <div class="flex-auto">
+              <input
+                placeholder="What's next?"
+                name="title"
+                type="text"
+                required
+                class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm"
+              />
+            </div>
+            <div class="flex-auto">
+              <input
+                type="date"
+                name="dueDate"
+                required
+                class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm leading-4"
+              />
+            </div>
+            <div class="flex-none">
+              <button
+                type="submit"
+                class="bg-green-600 text-white px-5 py-2 rounded"
+              >
+                Add
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <div>
+          <div class="flex gap-2">
+            <h5>Overdue</h5>
+            <span id="count-overdue">(<%= overdueTodos.length %>)</span>
+          </div>
+          <ul class="list-none">
+            <% for (let todo of overdueTodos) { %>
+            <li class="todo-item"><%- include('todo-item.ejs', { todo }) %></li>
+            <% } %>
+          </ul>
+          <div class="flex gap-2">
+            <h5>Due Today</h5>
+            <span id="count-due-today">(<%= dueTodayTodos.length %>)</span>
+          </div>
+          <ul class="list-none">
+            <% for (let todo of dueTodayTodos) { %>
+            <li class="todo-item"><%- include('todo-item.ejs', { todo }) %></li>
+            <% } %>
+          </ul>
+          <div class="flex gap-2">
+            <h5>Due Later</h5>
+            <span id="count-due-later">(<%= dueLaterTodos.length %>)</span>
+          </div>
+          <ul class="list-none">
+            <% for (let todo of dueLaterTodos) { %>
+            <li class="todo-item"><%- include('todo-item.ejs', { todo }) %></li>
+            <% } %>
+          </ul>
+          <div class="flex gap-2">
+            <h5>Completed</h5>
+            <span id="count-completed">(<%= completedTodos.length %>)</span>
+          </div>
+          <ul class="list-none">
+            <% for (let todo of completedTodos) { %>
+            <li class="todo-item"><%- include('todo-item.ejs', { todo }) %></li>
+            <% } %>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <%- include('footer.ejs') %>
+  </body>
+</html>
