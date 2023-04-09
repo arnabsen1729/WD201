@@ -116,7 +116,7 @@ app.get('/todos', connectEnsureLogin.ensureLoggedIn(), async (req, res) => {
   const dueLaterTodos = await Todo.dueLaterTodos(req.user.id)
   const dueTodayTodos = await Todo.dueTodayTodos(req.user.id)
   const completedTodos = await Todo.completedTodos(req.user.id)
-  return res.render('todos', {
+  return res.render('todo', {
     overdueTodos,
     dueLaterTodos,
     dueTodayTodos,
@@ -185,4 +185,4 @@ app.delete('/todos/:id', connectEnsureLogin.ensureLoggedIn(), async (req, res) =
   }
 })
 
-module.exports = app
+module.exports = app;
